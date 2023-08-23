@@ -22,10 +22,12 @@ public class TitleView extends JFrame {
         setPreferredSize(new Dimension(600, 400));
         setLayout(new BorderLayout());
 
-        // Logo label
         JLabel logoLabel = new JLabel(new ImageIcon("src/main/resources/img/logo.png"));
         logoLabel.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 0));
         add(logoLabel, BorderLayout.PAGE_START, 0);
+
+        ImageIcon icono = new ImageIcon("src/main/resources/img/icon.png");
+        setIconImage(icono.getImage());
 
         // Panel for input components
         JPanel inputPanel = new JPanel();
