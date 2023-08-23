@@ -7,12 +7,15 @@ version = '1.0-SNAPSHOT'
 
 repositories {
     mavenCentral()
+    //jcenter()
+    maven { url 'https://jitpack.io' }
 }
 
 dependencies {
     implementation 'org.swinglabs.swingx:swingx-all:1.6.5-1'
     testImplementation platform('org.junit:junit-bom:5.9.1')
     testImplementation 'org.junit.jupiter:junit-jupiter'
+    implementation 'com.github.maxisandoval37:pp2-core:-SNAPSHOT'
 }
 
 test {
