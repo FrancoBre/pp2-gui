@@ -15,7 +15,9 @@ dependencies {
     implementation 'org.swinglabs.swingx:swingx-all:1.6.5-1'
     testImplementation platform('org.junit:junit-bom:5.9.1')
     testImplementation 'org.junit.jupiter:junit-jupiter'
-    implementation 'com.github.maxisandoval37:pp2-core:-SNAPSHOT'
+    compileOnly 'org.projectlombok:lombok:1.18.26'
+    annotationProcessor 'org.projectlombok:lombok:1.18.26'
+    implementation 'com.github.maxisandoval37:pp2-core:SRP-and-SoC-fixes-SNAPSHOT'
 }
 
 test {
