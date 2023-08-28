@@ -5,16 +5,20 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.WindowConstants;
 import lombok.Getter;
+import lombok.Setter;
 import org.ungs.controller.ShopinatorController;
 import service.ProductSearcher;
 
 @Getter
+@Setter
 public class ShopinatorView extends JFrame {
 
     JTextField productNameField;
@@ -23,6 +27,7 @@ public class ShopinatorView extends JFrame {
     ShopinatorController shopinatorController;
     TitlePanel titlePanel;
     NotFoundPanel notFoundPanel;
+    ProductsPanel productsPanel;
 
     public ShopinatorView(ProductSearcher productSearcher) {
         this.initialize();
@@ -33,8 +38,16 @@ public class ShopinatorView extends JFrame {
     public void initialize() {
         setTitle("Shopinator");
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        setPreferredSize(new Dimension(600, 400));
+        setPreferredSize(new Dimension(500, 400));
         setLayout(new BorderLayout());
+
+        JLabel logoLabel = new JLabel(new ImageIcon("src/main/resources/img/logo.png"));
+        logoLabel.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
+        add(logoLabel, BorderLayout.PAGE_START, 0);
+
+        ImageIcon icon = new ImageIcon("src/main/resources/img/icon.png");
+
+        setIconImage(icon.getImage());
 
         // Panel for input components
         JPanel inputPanel = new JPanel();
