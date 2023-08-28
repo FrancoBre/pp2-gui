@@ -74,7 +74,7 @@ public class ShopinatorView extends JFrame {
         pack();
         setLocationRelativeTo(null); // Center the window
 
-        this.titlePanel = new TitlePanel();
+        this.titlePanel = new TitlePanel(this);
         this.add(titlePanel, BorderLayout.CENTER);
     }
 
