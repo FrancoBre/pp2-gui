@@ -18,6 +18,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.SwingUtilities;
+import javax.swing.SwingWorker;
 import models.Product;
 import org.ungs.utils.ShopinatorUtil;
 
@@ -27,19 +29,46 @@ public class ProductsPanel extends JPanel {
         setPreferredSize(new Dimension(800, 600));
         setLayout(new BorderLayout());
 
-        JPanel cardPanel = new JPanel();
-        cardPanel.setLayout(new BoxLayout(cardPanel, BoxLayout.Y_AXIS)); // Use BoxLayout with Y_AXIS alignment
+        // Create a panel to hold the spinner GIF
+        JPanel loadingPanel = new JPanel();
+        loadingPanel.setLayout(new BorderLayout());
+        ImageIcon spinnerIcon = new ImageIcon("src/main/resources/img/spinner.gif"); // Replace with your GIF path
+        JLabel spinnerLabel = new JLabel(spinnerIcon);
+        loadingPanel.add(spinnerLabel, BorderLayout.CENTER);
 
-        for (Product product : products) {
-            JPanel card = createCard(product);
-            cardPanel.add(card);
-            cardPanel.add(Box.createRigidArea(new Dimension(0, 10))); // Add spacing between cards
-        }
+        add(loadingPanel, BorderLayout.CENTER); // Initially show the spinner GIF
 
-        JScrollPane scrollPane = new JScrollPane(cardPanel);
-        scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+        SwingWorker<Void, Void> worker = new SwingWorker<>() {
+            @Override
+            protected Void doInBackground() throws Exception {
+                // Simulate loading time (remove this in your actual code)
+                Thread.sleep(2000);
 
-        add(scrollPane, BorderLayout.CENTER);
+                // Load and create cards
+                JPanel cardPanel = new JPanel();
+                cardPanel.setLayout(new BoxLayout(cardPanel, BoxLayout.Y_AXIS));
+
+                for (Product product : products) {
+                    JPanel card = createCard(product);
+                    cardPanel.add(card);
+                    cardPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+                }
+
+                // Replace spinner GIF with the card panel
+                SwingUtilities.invokeLater(() -> {
+                    remove(loadingPanel);
+                    JScrollPane scrollPane = new JScrollPane(cardPanel);
+                    scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+                    add(scrollPane, BorderLayout.CENTER);
+                    revalidate();
+                    repaint();
+                });
+
+                return null;
+            }
+        };
+
+        worker.execute();
     }
 
     private JPanel createCard(Product product) {
