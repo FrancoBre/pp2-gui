@@ -1,21 +1,21 @@
 package org.ungs.main;
 
 import javax.swing.SwingUtilities;
-import org.ungs.view.ShopinatorView;
-import service.ProductSearcher;
+import org.ungs.view.ShoppinatorView;
+import shoppinator.core.Shoppinator;
 
 public class Main {
 
-    private final ProductSearcher productSearcher;
-    private final ShopinatorView shopinatorView;
+    private final Shoppinator shoppinator;
+    private final ShoppinatorView shoppinatorView;
 
     public Main() {
-        this.productSearcher = new ProductSearcher(null);
-        this.shopinatorView = new ShopinatorView(productSearcher);
+        this.shoppinator = new Shoppinator("plugins/");
+        this.shoppinatorView = new ShoppinatorView(shoppinator);
     }
 
     private void init() {
-        SwingUtilities.invokeLater(() -> this.shopinatorView.init());
+        SwingUtilities.invokeLater(() -> this.shoppinatorView.init());
     }
 
     public static void main(String[] args) {

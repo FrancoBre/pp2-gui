@@ -20,9 +20,9 @@ class CarouselPanel extends JPanel implements ActionListener {
     JButton prevButton;
     JButton nextButton;
     int i;
-    ShopinatorView shopinatorView;
+    ShoppinatorView shoppinatorView;
 
-    public CarouselPanel(ShopinatorView shopinatorView) {
+    public CarouselPanel(ShoppinatorView shoppinatorView) {
         setLayout(new BorderLayout());
         setSize(800, 700);
         setVisible(true);
@@ -49,13 +49,13 @@ class CarouselPanel extends JPanel implements ActionListener {
                 if (i >= 0 && i < imageIcons.length) {
                     switch (i) {
                         case 0:
-                            shopinatorView.getProductNameField().setText("TV Samsung 50 pulgadas 4K");
+                            shoppinatorView.getProductNameField().setText("TV Samsung 50 pulgadas 4K");
                             break;
                         case 1:
-                            shopinatorView.getProductNameField().setText("Macbook Air M2 2020");
+                            shoppinatorView.getProductNameField().setText("Macbook Air M2 2020");
                             break;
                         case 2:
-                            shopinatorView.getProductNameField().setText("Microondas Philips 30L");
+                            shoppinatorView.getProductNameField().setText("Microondas Philips 30L");
                             break;
                         default:
                             break;

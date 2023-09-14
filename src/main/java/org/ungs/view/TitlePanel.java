@@ -9,7 +9,7 @@ import javax.swing.SwingConstants;
 
 public class TitlePanel extends JPanel {
 
-    public TitlePanel(ShopinatorView shopinatorView) {
+    public TitlePanel(ShoppinatorView shoppinatorView) {
         setPreferredSize(new Dimension(600, 400));
         setLayout(new BorderLayout());
 
@@ -24,7 +24,9 @@ public class TitlePanel extends JPanel {
         instructionsLabel.setFont(new Font("Arial", Font.PLAIN, 14));
         instructionsLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
-        CarouselPanel carouselPanel = new CarouselPanel(shopinatorView);
+        //this.setToolTipText(instructions);
+
+        CarouselPanel carouselPanel = new CarouselPanel(shoppinatorView);
 
         // Add the instructions label to the frame
         add(carouselPanel, BorderLayout.CENTER, 0); // Carousel at the bottom

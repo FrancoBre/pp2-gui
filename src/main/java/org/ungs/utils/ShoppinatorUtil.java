@@ -5,24 +5,17 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 import javax.imageio.ImageIO;
 import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import models.Product;
-import models.ProductImage;
-import models.ProductPresentation;
-import models.ShopProduct;
 
 @Slf4j
 @NoArgsConstructor(access = lombok.AccessLevel.PRIVATE)
-public class ShopinatorUtil {
+public class ShoppinatorUtil {
 
     public static void openWebBrowser(String url) {
         if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
@@ -62,7 +55,7 @@ public class ShopinatorUtil {
         return resizedImage;
     }
 
-    public static List<Product> createMockProductList() {
+    /*public static List<Product> createMockProductList() {
         List<Product> productList = new ArrayList<>();
 
         ProductImage productImage1 = new ProductImage(
@@ -79,5 +72,5 @@ public class ShopinatorUtil {
         productList.add(new Product("El segundo mejor producto", productPresentation2));
 
         return productList;
-    }
+    }*/
 }
