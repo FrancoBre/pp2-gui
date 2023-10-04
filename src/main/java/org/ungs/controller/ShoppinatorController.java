@@ -3,6 +3,8 @@ package org.ungs.controller;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 import org.ungs.view.NotFoundPanel;
@@ -10,7 +12,6 @@ import org.ungs.view.ProductsPanel;
 import org.ungs.view.ShoppinatorView;
 import org.ungs.view.SpinnerPanel;
 import shoppinator.core.Shoppinator;
-import shoppinator.core.interfaces.Shop;
 import shoppinator.core.model.Product;
 
 public class ShoppinatorController {
@@ -31,6 +32,9 @@ public class ShoppinatorController {
         shoppinatorView.getProductNameField().addActionListener(actionListener);
         shoppinatorView.getMaxPriceField().addActionListener(actionListener);
         shoppinatorView.getMinPriceField().addActionListener(actionListener);
+
+        RefreshMouseAdapter refreshMouseAdapter = new RefreshMouseAdapter();
+        shoppinatorView.getRefreshButton().addMouseListener(refreshMouseAdapter);
     }
 
     private class SearchActionListener implements ActionListener {
@@ -53,6 +57,16 @@ public class ShoppinatorController {
             shoppinatorView.revalidate();
 
             shoppinator.search(getSearchParams());
+        }
+    }
+
+    private class RefreshMouseAdapter extends MouseAdapter {
+
+        @Override
+        public void mouseClicked(MouseEvent e) {
+
+            System.out.println("refrescate! aaah qué rica seven up");
+            //shoppinator.refresh(getSearchParams());
         }
     }
 
@@ -91,8 +105,8 @@ public class ShoppinatorController {
         minPrice = minPrice.replace(",", "");
         maxPrice = maxPrice.replace(",", "");
 
-        if(!minPrice.isEmpty() && !maxPrice.isEmpty()) {
-            if(Double.parseDouble(minPrice) > Double.parseDouble(maxPrice)) {
+        if (!minPrice.isEmpty() && !maxPrice.isEmpty()) {
+            if (Double.parseDouble(minPrice) > Double.parseDouble(maxPrice)) {
                 paintPriceFieldsRed();
                 return false;
             }
@@ -131,7 +145,7 @@ public class ShoppinatorController {
     }
 
     protected String[] getSearchParams() {
-        return new String[] {
+        return new String[]{
             shoppinatorView.getProductNameField().getText(),
             shoppinatorView.getMinPriceField().getText(),
             shoppinatorView.getMaxPriceField().getText()

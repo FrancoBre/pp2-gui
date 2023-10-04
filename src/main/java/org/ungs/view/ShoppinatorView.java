@@ -5,12 +5,17 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Image;
+import java.awt.Insets;
 import java.text.NumberFormat;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -30,6 +35,7 @@ public class ShoppinatorView extends JFrame implements Observer {
     JTextField productNameField;
     JFormattedTextField minPriceField;
     JFormattedTextField maxPriceField;
+    JButton refreshButton;
 
     Shoppinator shoppinator;
     ShoppinatorController shoppinatorController;
@@ -44,24 +50,42 @@ public class ShoppinatorView extends JFrame implements Observer {
         addObservers();
     }
 
-    public void init(Shoppinator shoppinator) {
-        this.shoppinator = shoppinator;
-        initialize();
-        this.shoppinatorController = new ShoppinatorController(this, shoppinator);
-    }
-
     public void initialize() {
         setTitle("Shoppinator");
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setPreferredSize(new Dimension(500, 400));
         setLayout(new BorderLayout());
 
+        JPanel headerPanel = new JPanel();
+        headerPanel.setLayout(new GridBagLayout()); // Use GridBagLayout for the header panel
+
+        GridBagConstraints logoConstraints = new GridBagConstraints();
+        logoConstraints.gridx = 0;
+        logoConstraints.gridy = 0;
+        logoConstraints.weightx = 1.0; // Expand horizontally
+        logoConstraints.insets = new Insets(10, 10, 10, 10); // Padding
+        logoConstraints.anchor = GridBagConstraints.CENTER; // Center alignment
+
         JLabel logoLabel = new JLabel(new ImageIcon("src/main/resources/img/logo.png"));
         logoLabel.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
-        add(logoLabel, BorderLayout.PAGE_START, 0);
+        headerPanel.add(logoLabel, logoConstraints);
+
+        GridBagConstraints refreshConstraints = new GridBagConstraints();
+        refreshConstraints.gridx = 1;
+        refreshConstraints.gridy = 0;
+        refreshConstraints.insets = new Insets(10, 10, 10, 10); // Padding
+        refreshConstraints.anchor = GridBagConstraints.LINE_START; // Align to the left
+
+        refreshButton = new JButton();
+        ImageIcon refreshIcon = new ImageIcon("src/main/resources/img/refresh.png");
+        Image scaledImage = refreshIcon.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+        refreshIcon = new ImageIcon(scaledImage);
+        refreshButton.setIcon(refreshIcon);
+        headerPanel.add(refreshButton, refreshConstraints);
+
+        add(headerPanel, BorderLayout.PAGE_START);
 
         ImageIcon icon = new ImageIcon("src/main/resources/img/icon.png");
-
         setIconImage(icon.getImage());
 
         JPanel inputPanel = new JPanel();
@@ -122,7 +146,6 @@ public class ShoppinatorView extends JFrame implements Observer {
 
     @Override
     public void update(Observable o, Object productList) {
-
         List<Product> products = (List<Product>) productList;
         shoppinatorController.updateProductsPanel(products);
     }
@@ -132,5 +155,4 @@ public class ShoppinatorView extends JFrame implements Observer {
 
         this.update(null, shoppinator.getProducts());
     }
-
 }
