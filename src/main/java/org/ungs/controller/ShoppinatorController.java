@@ -9,7 +9,6 @@ import org.ungs.view.NotFoundPanel;
 import org.ungs.view.ProductsPanel;
 import org.ungs.view.ShoppinatorView;
 import org.ungs.view.SpinnerPanel;
-import org.ungs.view.TitlePanel;
 import shoppinator.core.Shoppinator;
 import shoppinator.core.interfaces.Shop;
 import shoppinator.core.model.Product;
@@ -17,7 +16,6 @@ import shoppinator.core.model.Product;
 public class ShoppinatorController {
 
     private ShoppinatorView shoppinatorView;
-    private TitlePanel titlePanel;
     private Shoppinator shoppinator;
 
     private List<Product> productList;

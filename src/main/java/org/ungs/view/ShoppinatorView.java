@@ -33,7 +33,6 @@ public class ShoppinatorView extends JFrame implements Observer {
 
     Shoppinator shoppinator;
     ShoppinatorController shoppinatorController;
-    TitlePanel titlePanel;
     NotFoundPanel notFoundPanel;
     ProductsPanel productsPanel;
     SpinnerPanel spinnerPanel;
