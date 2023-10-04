@@ -16,6 +16,7 @@ import java.util.Observer;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -36,6 +37,9 @@ public class ShoppinatorView extends JFrame implements Observer {
     JFormattedTextField minPriceField;
     JFormattedTextField maxPriceField;
     JButton refreshButton;
+    JCheckBox fravegaCheckbox;
+    JCheckBox garbarinoCheckbox;
+    JLabel checkboxesNotSelected;
 
     Shoppinator shoppinator;
     ShoppinatorController shoppinatorController;
@@ -53,7 +57,7 @@ public class ShoppinatorView extends JFrame implements Observer {
     public void initialize() {
         setTitle("Shoppinator");
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        setPreferredSize(new Dimension(500, 400));
+        setPreferredSize(new Dimension(500, 500));
         setLayout(new BorderLayout());
 
         JPanel headerPanel = new JPanel();
@@ -133,6 +137,28 @@ public class ShoppinatorView extends JFrame implements Observer {
         pricePanel.add(maxPriceField);
 
         inputPanel.add(pricePanel, BorderLayout.CENTER);
+
+        JPanel checkboxesPanel = new JPanel();
+        checkboxesPanel.setLayout(new FlowLayout());
+        checkboxesPanel.setBackground(new Color(55, 71, 79));
+        checkboxesNotSelected = new JLabel(new ImageIcon("src/main/resources/img/arrow.png"));
+
+        fravegaCheckbox = new JCheckBox("Fravega");
+        garbarinoCheckbox = new JCheckBox("Garbarino");
+
+        fravegaCheckbox.setForeground(Color.WHITE);
+        garbarinoCheckbox.setForeground(Color.WHITE);
+
+        JPanel imageAndCheckboxesPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        imageAndCheckboxesPanel.setBackground(new Color(55, 71, 79));
+
+        imageAndCheckboxesPanel.add(checkboxesNotSelected);
+        imageAndCheckboxesPanel.add(fravegaCheckbox);
+        imageAndCheckboxesPanel.add(garbarinoCheckbox);
+
+        checkboxesNotSelected.setVisible(false);
+
+        inputPanel.add(imageAndCheckboxesPanel, BorderLayout.SOUTH);
 
         add(inputPanel, BorderLayout.SOUTH);
 

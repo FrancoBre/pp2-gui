@@ -20,6 +20,7 @@ public class ShoppinatorController {
     private Shoppinator shoppinator;
 
     private List<Product> productList;
+    private String[] selectedShops;
 
     public ShoppinatorController(ShoppinatorView shoppinatorView, Shoppinator shoppinator) {
         this.shoppinatorView = shoppinatorView;
@@ -35,6 +36,10 @@ public class ShoppinatorController {
 
         RefreshMouseAdapter refreshMouseAdapter = new RefreshMouseAdapter();
         shoppinatorView.getRefreshButton().addMouseListener(refreshMouseAdapter);
+
+        CheckboxActionListener checkboxActionListener = new CheckboxActionListener();
+        shoppinatorView.getFravegaCheckbox().addActionListener(checkboxActionListener);
+        shoppinatorView.getGarbarinoCheckbox().addActionListener(checkboxActionListener);
     }
 
     private class SearchActionListener implements ActionListener {
@@ -70,6 +75,24 @@ public class ShoppinatorController {
         }
     }
 
+    private class CheckboxActionListener implements ActionListener {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            shoppinatorView.getCheckboxesNotSelected().setVisible(false);
+
+            if(shoppinatorView.getFravegaCheckbox().isSelected() && shoppinatorView.getGarbarinoCheckbox().isSelected()) {
+                selectedShops = new String[] {"fravega", "garbarino"};
+            } else if(shoppinatorView.getFravegaCheckbox().isSelected()) {
+                selectedShops = new String[] {"fravega"};
+            } else if(shoppinatorView.getGarbarinoCheckbox().isSelected()) {
+                selectedShops = new String[] {"garbarino"};
+            } else {
+                selectedShops = new String[] {};
+            }
+        }
+    }
+
     public void updateProductsPanel(List<Product> productList) {
         if (!productList.isEmpty()) {
 
@@ -95,7 +118,16 @@ public class ShoppinatorController {
     }
 
     protected boolean areSearchParamsValid() {
-        return isProductSearchParamValid() && arePriceSearchParamsValid();
+        return isProductSearchParamValid() && arePriceSearchParamsValid() && areCheckboxesSelected();
+    }
+
+    private boolean areCheckboxesSelected() {
+        if (shoppinatorView.getFravegaCheckbox().isSelected() || shoppinatorView.getGarbarinoCheckbox().isSelected()) {
+            return true;
+        } else {
+            shoppinatorView.getCheckboxesNotSelected().setVisible(true);
+            return false;
+        }
     }
 
     private boolean arePriceSearchParamsValid() {
