@@ -18,7 +18,7 @@ dependencies {
     compileOnly 'org.projectlombok:lombok:1.18.26'
     annotationProcessor 'org.projectlombok:lombok:1.18.26'
     implementation 'org.slf4j:slf4j-api:2.0.5'
-    implementation 'com.github.maxisandoval37:pp2-core:main-SNAPSHOT'
+    implementation 'com.github.maxisandoval37:pp2-core:iteracion-1-SNAPSHOT'
 }
 
 test {

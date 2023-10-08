@@ -177,8 +177,8 @@ public class ShoppinatorView extends JFrame implements Observer {
     }
 
     private void addObservers() {
-        shoppinator.addObserver(this);
+        shoppinator.subscribe(this);
 
-        this.update(null, shoppinator.getProducts());
+        this.update(null, shoppinator.getProductList());
     }
 }

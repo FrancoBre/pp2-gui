@@ -5,8 +5,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
+import org.ungs.utils.ShoppinatorUtil;
 import org.ungs.view.NotFoundPanel;
 import org.ungs.view.ProductsPanel;
 import org.ungs.view.ShoppinatorView;
@@ -14,6 +17,7 @@ import org.ungs.view.SpinnerPanel;
 import shoppinator.core.Shoppinator;
 import shoppinator.core.model.Product;
 
+@Slf4j
 public class ShoppinatorController {
 
     private ShoppinatorView shoppinatorView;
@@ -61,7 +65,15 @@ public class ShoppinatorController {
             shoppinatorView.add(shoppinatorView.getSpinnerPanel());
             shoppinatorView.revalidate();
 
-            shoppinator.search(getSearchParams());
+            try {
+                shoppinator.search(getSearchParams());
+            } catch (FileNotFoundException ex) {
+                NotFoundPanel notFoundPanel = new NotFoundPanel("Ocurrió un error durante la búsqueda");
+                shoppinatorView.remove(shoppinatorView.getSpinnerPanel());
+                shoppinatorView.add(notFoundPanel);
+                shoppinatorView.revalidate();
+                log.error(ex.getMessage());
+            }
         }
     }
 
@@ -70,8 +82,15 @@ public class ShoppinatorController {
         @Override
         public void mouseClicked(MouseEvent e) {
 
-            System.out.println("refrescate! aaah qué rica seven up");
-            //shoppinator.refresh(getSearchParams());
+            try {
+                shoppinator.search();
+            } catch (FileNotFoundException ex) {
+                NotFoundPanel notFoundPanel = new NotFoundPanel("Ocurrió un error durante la búsqueda");
+                shoppinatorView.remove(shoppinatorView.getSpinnerPanel());
+                shoppinatorView.add(notFoundPanel);
+                shoppinatorView.revalidate();
+                log.error(ex.getMessage());
+            }
         }
     }
 
@@ -110,7 +129,7 @@ public class ShoppinatorController {
             shoppinatorView.add(productsPanel);
             shoppinatorView.revalidate();
         } else {
-            NotFoundPanel notFoundPanel = new NotFoundPanel();
+            NotFoundPanel notFoundPanel = new NotFoundPanel("No se encontraron productos para tu búsqueda");
             shoppinatorView.remove(shoppinatorView.getSpinnerPanel());
             shoppinatorView.add(notFoundPanel);
             shoppinatorView.revalidate();
@@ -177,10 +196,20 @@ public class ShoppinatorController {
     }
 
     protected String[] getSearchParams() {
-        return new String[]{
+        String[] params = {
+            ShoppinatorUtil.PLUGINS_PATH,
             shoppinatorView.getProductNameField().getText(),
-            shoppinatorView.getMinPriceField().getText(),
-            shoppinatorView.getMaxPriceField().getText()
+            shoppinatorView.getMinPriceField().getText().replace(",", ""),
+            shoppinatorView.getMaxPriceField().getText().replace(",", ""),
         };
+
+        return this.concatenateArrays(params, this.selectedShops);
+    }
+
+    private String[] concatenateArrays(String[] array1, String[] array2) {
+        String[] concatenatedArray = new String[array1.length + array2.length];
+        System.arraycopy(array1, 0, concatenatedArray, 0, array1.length);
+        System.arraycopy(array2, 0, concatenatedArray, array1.length, array2.length);
+        return concatenatedArray;
     }
 }
