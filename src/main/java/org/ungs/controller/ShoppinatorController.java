@@ -8,14 +8,12 @@ import org.ungs.view.NotFoundPanel;
 import org.ungs.view.ProductsPanel;
 import org.ungs.view.ShoppinatorView;
 import org.ungs.view.SpinnerPanel;
-import org.ungs.view.TitlePanel;
 import shoppinator.core.Shoppinator;
 import shoppinator.core.model.Product;
 
 public class ShoppinatorController {
 
     private ShoppinatorView shoppinatorView;
-    private TitlePanel titlePanel;
     private Shoppinator shoppinator;
 
     private List<Product> productList;
@@ -35,8 +33,6 @@ public class ShoppinatorController {
         public void actionPerformed(ActionEvent e) {
             String productName = shoppinatorView.getProductNameField().getText();
 
-            shoppinatorView.remove(shoppinatorView.getTitlePanel());
-
             if (shoppinatorView.getProductsPanel() != null) {
                 shoppinatorView.remove(shoppinatorView.getProductsPanel());
             }
@@ -51,12 +47,6 @@ public class ShoppinatorController {
     }
 
     public void updateProductsPanel(List<Product> productList) {
-        /*List<Product> products;
-            if(productName.equals("vacio")) {
-                products = Collections.emptyList();
-            } else {
-                products = ShoppinatorUtil.createMockProductList();
-        }*/
         if (!productList.isEmpty()) {
 
             if(shoppinatorView.getProductsPanel() != null) {
@@ -66,7 +56,9 @@ public class ShoppinatorController {
             ProductsPanel productsPanel = new ProductsPanel(productList);
             shoppinatorView.setProductsPanel(productsPanel);
 
-            shoppinatorView.remove(shoppinatorView.getSpinnerPanel());
+            if(shoppinatorView.getSpinnerPanel() != null) {
+                shoppinatorView.remove(shoppinatorView.getSpinnerPanel());
+            }
             shoppinatorView.add(productsPanel);
             shoppinatorView.revalidate();
         } else {

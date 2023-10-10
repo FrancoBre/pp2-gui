@@ -35,7 +35,7 @@ public class ShoppinatorUtil {
         try {
             image = fetchImage(imageUrl);
             return resizeImage(image);
-        } catch (IOException e) {
+        } catch (Exception e) {
             image = ImageIO.read(new File("src/main/resources/img/default-image.png"));
         }
 
@@ -55,22 +55,4 @@ public class ShoppinatorUtil {
         return resizedImage;
     }
 
-    /*public static List<Product> createMockProductList() {
-        List<Product> productList = new ArrayList<>();
-
-        ProductImage productImage1 = new ProductImage(
-            "https://ps.w.org/tiny-compress-images/assets/icon-256x256.png?rev=1088385");
-        ShopProduct shopProduct1 = new ShopProduct("https://www.youtube.com/watch?v=dQw4w9WgXcQ");
-        ProductPresentation productPresentation1 = new ProductPresentation(BigDecimal.valueOf(49.99), shopProduct1,
-            productImage1);
-        productList.add(new Product("El mejor producto de la historia", productPresentation1));
-
-        ProductImage productImage2 = new ProductImage("https://i.stack.imgur.com/GsDIl.jpg");
-        ShopProduct shopProduct2 = new ShopProduct("https://www.youtube.com/watch?v=dQw4w9WgXcQ");
-        ProductPresentation productPresentation2 = new ProductPresentation(BigDecimal.valueOf(79.99), shopProduct2,
-            productImage2);
-        productList.add(new Product("El segundo mejor producto", productPresentation2));
-
-        return productList;
-    }*/
 }

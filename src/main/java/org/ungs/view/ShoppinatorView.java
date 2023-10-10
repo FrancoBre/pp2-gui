@@ -19,7 +19,6 @@ import lombok.Getter;
 import lombok.Setter;
 import org.ungs.controller.ShoppinatorController;
 import shoppinator.core.Shoppinator;
-import shoppinator.core.interfaces.Shop;
 import shoppinator.core.model.Product;
 
 @Getter
@@ -30,22 +29,21 @@ public class ShoppinatorView extends JFrame implements Observer {
 
     Shoppinator shoppinator;
     ShoppinatorController shoppinatorController;
-    TitlePanel titlePanel;
     NotFoundPanel notFoundPanel;
     ProductsPanel productsPanel;
     SpinnerPanel spinnerPanel;
 
     public ShoppinatorView(Shoppinator shoppinator) {
-        this.initialize();
         this.shoppinator = shoppinator;
-        addObservers();
+        this.initialize();
         this.shoppinatorController = new ShoppinatorController(this, shoppinator);
+        addObservers();
     }
 
     private void addObservers() {
-        for (Shop shop : this.shoppinator.getShops()) {
-            shop.addObserver(this);
-        }
+        this.shoppinator.addObserver(this);
+
+        this.update(null, shoppinator.getProducts());
     }
 
     public void initialize() {
@@ -86,9 +84,6 @@ public class ShoppinatorView extends JFrame implements Observer {
 
         pack();
         setLocationRelativeTo(null); // Center the window
-
-        this.titlePanel = new TitlePanel(this);
-        this.add(titlePanel, BorderLayout.CENTER);
     }
 
     public void init() {
