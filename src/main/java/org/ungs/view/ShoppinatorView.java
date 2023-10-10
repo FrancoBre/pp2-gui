@@ -5,6 +5,9 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -14,29 +17,37 @@ import javax.swing.JTextField;
 import javax.swing.WindowConstants;
 import lombok.Getter;
 import lombok.Setter;
-import org.ungs.controller.ShopinatorController;
-import service.ProductSearcher;
+import org.ungs.controller.ShoppinatorController;
+import shoppinator.core.Shoppinator;
+import shoppinator.core.model.Product;
 
 @Getter
 @Setter
-public class ShopinatorView extends JFrame {
+public class ShoppinatorView extends JFrame implements Observer {
 
     JTextField productNameField;
 
-    ProductSearcher productSearcher;
-    ShopinatorController shopinatorController;
-    TitlePanel titlePanel;
+    Shoppinator shoppinator;
+    ShoppinatorController shoppinatorController;
     NotFoundPanel notFoundPanel;
     ProductsPanel productsPanel;
+    SpinnerPanel spinnerPanel;
 
-    public ShopinatorView(ProductSearcher productSearcher) {
+    public ShoppinatorView(Shoppinator shoppinator) {
+        this.shoppinator = shoppinator;
         this.initialize();
-        this.productSearcher = productSearcher;
-        this.shopinatorController = new ShopinatorController(this, productSearcher);
+        this.shoppinatorController = new ShoppinatorController(this, shoppinator);
+        addObservers();
+    }
+
+    private void addObservers() {
+        this.shoppinator.addObserver(this);
+
+        this.update(null, shoppinator.getProducts());
     }
 
     public void initialize() {
-        setTitle("Shopinator");
+        setTitle("Shoppinator");
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setPreferredSize(new Dimension(500, 400));
         setLayout(new BorderLayout());
@@ -73,13 +84,16 @@ public class ShopinatorView extends JFrame {
 
         pack();
         setLocationRelativeTo(null); // Center the window
-
-        this.titlePanel = new TitlePanel(this);
-        this.add(titlePanel, BorderLayout.CENTER);
     }
 
     public void init() {
         this.setVisible(true);
     }
 
+    @Override
+    public void update(Observable o, Object productList) {
+
+        List<Product> products = (List<Product>) productList;
+        shoppinatorController.updateProductsPanel(products);
+    }
 }

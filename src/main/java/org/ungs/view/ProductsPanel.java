@@ -10,18 +10,17 @@ import java.awt.Insets;
 import java.awt.image.BufferedImage;
 import java.util.List;
 import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingUtilities;
-import javax.swing.SwingWorker;
-import models.Product;
-import org.ungs.utils.ShopinatorUtil;
+import org.ungs.utils.ShoppinatorUtil;
+import shoppinator.core.model.Product;
 
 public class ProductsPanel extends JPanel {
 
@@ -29,46 +28,25 @@ public class ProductsPanel extends JPanel {
         setPreferredSize(new Dimension(800, 600));
         setLayout(new BorderLayout());
 
-        // Create a panel to hold the spinner GIF
-        JPanel loadingPanel = new JPanel();
-        loadingPanel.setLayout(new BorderLayout());
-        ImageIcon spinnerIcon = new ImageIcon("src/main/resources/img/spinner.gif"); // Replace with your GIF path
-        JLabel spinnerLabel = new JLabel(spinnerIcon);
-        loadingPanel.add(spinnerLabel, BorderLayout.CENTER);
+        // Load and create cards
+        JPanel cardPanel = new JPanel();
+        cardPanel.setLayout(new BoxLayout(cardPanel, BoxLayout.Y_AXIS));
 
-        add(loadingPanel, BorderLayout.CENTER); // Initially show the spinner GIF
+        for (Product product : products) {
+            JPanel card = createCard(product);
+            cardPanel.add(card);
+            cardPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+        }
 
-        SwingWorker<Void, Void> worker = new SwingWorker<>() {
-            @Override
-            protected Void doInBackground() throws Exception {
-                // Simulate loading time (remove this in your actual code)
-                Thread.sleep(2000);
+        // Replace spinner GIF with the card panel
+        SwingUtilities.invokeLater(() -> {
+            JScrollPane scrollPane = new JScrollPane(cardPanel);
+            scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+            add(scrollPane, BorderLayout.CENTER);
+            revalidate();
+            repaint();
+        });
 
-                // Load and create cards
-                JPanel cardPanel = new JPanel();
-                cardPanel.setLayout(new BoxLayout(cardPanel, BoxLayout.Y_AXIS));
-
-                for (Product product : products) {
-                    JPanel card = createCard(product);
-                    cardPanel.add(card);
-                    cardPanel.add(Box.createRigidArea(new Dimension(0, 10)));
-                }
-
-                // Replace spinner GIF with the card panel
-                SwingUtilities.invokeLater(() -> {
-                    remove(loadingPanel);
-                    JScrollPane scrollPane = new JScrollPane(cardPanel);
-                    scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-                    add(scrollPane, BorderLayout.CENTER);
-                    revalidate();
-                    repaint();
-                });
-
-                return null;
-            }
-        };
-
-        worker.execute();
     }
 
     private JPanel createCard(Product product) {
@@ -84,7 +62,7 @@ public class ProductsPanel extends JPanel {
 
         // Add image to the left
         JLabel imageLabel = new JLabel();
-        BufferedImage image = ShopinatorUtil.fetchImageFromUrl(product.getProductPresentation().getProductImage().getImgUrl());
+        BufferedImage image = ShoppinatorUtil.fetchImageFromUrl(product.getProductPresentation().getProductImageUrl());
         imageLabel.setIcon(new ImageIcon(image));
         gbc.gridx = 0;
         gbc.gridy = 0; // Use gridy value
@@ -106,6 +84,15 @@ public class ProductsPanel extends JPanel {
         priceLabel.setFont(new Font("Arial", Font.PLAIN, 16)); // Set font and size
         titlePricePanel.add(priceLabel, BorderLayout.CENTER);
 
+        // Use a JLabel with vertical scrolling for the title
+        JLabel title = new JLabel("<html><body>" + product.getName() + "</body></html>");
+        title.setForeground(Color.WHITE);
+        title.setVerticalAlignment(JLabel.TOP);
+        title.setVerticalTextPosition(JLabel.TOP);
+        title.setOpaque(false); // Make it transparent
+        title.setPreferredSize(new Dimension(200, 50)); // Adjust the size as needed
+
+        // Add the title to the card
         gbc.gridx = 1;
         gbc.gridy = 0; // Use gridy value
         gbc.gridheight = 1; // Reset grid height
@@ -114,8 +101,9 @@ public class ProductsPanel extends JPanel {
         // Add button at the bottom
         JButton postButton = new JButton("Visitar tienda");
         postButton.addActionListener(e -> {
-            String postUrl = product.getProductPresentation().getShopProduct().getPostUrl();
-            ShopinatorUtil.openWebBrowser(postUrl);
+            //String postUrl = product.getProductPresentation().getShopProduct().getPostUrl();
+            String postUrl = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
+            ShoppinatorUtil.openWebBrowser(postUrl);
         });
         gbc.gridx = 1;
         gbc.gridy = 1; // Use gridy value
@@ -123,6 +111,5 @@ public class ProductsPanel extends JPanel {
 
         return card;
     }
-
 
 }
