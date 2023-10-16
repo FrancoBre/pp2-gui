@@ -1,5 +1,6 @@
 package org.ungs.view;
 
+import entities.Product;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -20,7 +21,6 @@ import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingUtilities;
 import org.ungs.utils.ShoppinatorUtil;
-import shoppinator.core.model.Product;
 
 public class ProductsPanel extends JPanel {
 
@@ -101,8 +101,7 @@ public class ProductsPanel extends JPanel {
         // Add button at the bottom
         JButton postButton = new JButton("Visitar tienda");
         postButton.addActionListener(e -> {
-            //String postUrl = product.getProductPresentation().getShopProduct().getPostUrl();
-            String postUrl = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
+            String postUrl = product.getPostUrl();
             ShoppinatorUtil.openWebBrowser(postUrl);
         });
         gbc.gridx = 1;
@@ -111,5 +110,4 @@ public class ProductsPanel extends JPanel {
 
         return card;
     }
-
 }

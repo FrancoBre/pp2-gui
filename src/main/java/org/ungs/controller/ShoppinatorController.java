@@ -1,5 +1,6 @@
 package org.ungs.controller;
 
+import entities.Product;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -15,7 +16,6 @@ import org.ungs.view.ProductsPanel;
 import org.ungs.view.ShoppinatorView;
 import org.ungs.view.SpinnerPanel;
 import shoppinator.core.Shoppinator;
-import shoppinator.core.model.Product;
 
 @Slf4j
 public class ShoppinatorController {

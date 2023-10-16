@@ -1,5 +1,6 @@
 package org.ungs.view;
 
+import entities.Product;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -27,7 +28,6 @@ import lombok.Getter;
 import lombok.Setter;
 import org.ungs.controller.ShoppinatorController;
 import shoppinator.core.Shoppinator;
-import shoppinator.core.model.Product;
 
 @Getter
 @Setter
