@@ -3,6 +3,7 @@ package org.ungs.main;
 import java.io.FileNotFoundException;
 import javax.swing.SwingUtilities;
 import org.ungs.view.ShoppinatorView;
+import service.factory.ShoppinatorFactory;
 import shoppinator.core.Shoppinator;
 
 public class Main {
@@ -11,7 +12,8 @@ public class Main {
     private final ShoppinatorView shoppinatorView;
 
     public Main() throws FileNotFoundException {
-        this.shoppinator = new Shoppinator("plugins/");
+        ShoppinatorFactory shoppinatorFactory = new ShoppinatorFactory();
+        this.shoppinator = shoppinatorFactory.create("plugins/");
         this.shoppinatorView = new ShoppinatorView(shoppinator);
     }
 

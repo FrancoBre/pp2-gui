@@ -11,7 +11,7 @@ import javax.swing.SwingConstants;
 
 public class NotFoundPanel extends JPanel {
 
-    public NotFoundPanel() {
+    public NotFoundPanel(String errorMessage) {
         setPreferredSize(new Dimension(400, 300));
 
         JLabel notFoundLabel = new JLabel(new ImageIcon("src/main/resources/img/not-found.png"));
@@ -19,7 +19,7 @@ public class NotFoundPanel extends JPanel {
         notFoundLabel.setPreferredSize(new Dimension(200, 209)); // Set a smaller size
         add(notFoundLabel, BorderLayout.CENTER);
 
-        JLabel messageLabel = new JLabel("No se encontraron productos para tu búsqueda");
+        JLabel messageLabel = new JLabel(errorMessage);
         messageLabel.setFont(new Font("Arial", Font.PLAIN, 16));
 
         messageLabel.setHorizontalAlignment(SwingConstants.CENTER);

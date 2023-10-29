@@ -1,5 +1,7 @@
 package org.ungs.controller;
 
+import entities.Product;
+import entities.Result;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -9,7 +11,6 @@ import org.ungs.view.ProductsPanel;
 import org.ungs.view.ShoppinatorView;
 import org.ungs.view.SpinnerPanel;
 import shoppinator.core.Shoppinator;
-import shoppinator.core.model.Product;
 
 public class ShoppinatorController {
 
@@ -42,11 +43,18 @@ public class ShoppinatorController {
             shoppinatorView.add(shoppinatorView.getSpinnerPanel());
             shoppinatorView.revalidate();
 
-            shoppinator.search(productName);
+            try {
+                shoppinator.search(productName);
+            } catch (Exception ex) {
+                NotFoundPanel notFoundPanel = new NotFoundPanel(ex.getMessage());
+                shoppinatorView.remove(shoppinatorView.getSpinnerPanel());
+                shoppinatorView.add(notFoundPanel);
+                shoppinatorView.revalidate();
+            }
         }
     }
 
-    public void updateProductsPanel(List<Product> productList) {
+    public void updateProductsPanel(List<Result> productList) {
         if (!productList.isEmpty()) {
 
             if(shoppinatorView.getProductsPanel() != null) {
@@ -62,7 +70,7 @@ public class ShoppinatorController {
             shoppinatorView.add(productsPanel);
             shoppinatorView.revalidate();
         } else {
-            NotFoundPanel notFoundPanel = new NotFoundPanel();
+            NotFoundPanel notFoundPanel = new NotFoundPanel("No se encontraron productos para tu búsqueda");
             shoppinatorView.remove(shoppinatorView.getSpinnerPanel());
             shoppinatorView.add(notFoundPanel);
             shoppinatorView.revalidate();
