@@ -1,9 +1,12 @@
 package org.ungs.main;
 
+import static org.ungs.utils.ShoppinatorUtil.PLUGINS_PATH;
+
 import java.io.FileNotFoundException;
 import javax.swing.SwingUtilities;
 import org.ungs.utils.ShoppinatorUtil;
 import org.ungs.view.ShoppinatorView;
+import service.factory.ShoppinatorFactory;
 import shoppinator.core.Shoppinator;
 
 public class Main {
@@ -14,8 +17,8 @@ public class Main {
     public Main() throws FileNotFoundException {
         logAsciiArt();
 
-        this.shoppinator = new Shoppinator();
-        shoppinator.init(ShoppinatorUtil.DEFAULT_PATH);
+        ShoppinatorFactory shoppinatorFactory = new ShoppinatorFactory();
+        this.shoppinator = shoppinatorFactory.create(PLUGINS_PATH);
         this.shoppinatorView = new ShoppinatorView(shoppinator);
     }
 

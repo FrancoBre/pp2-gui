@@ -1,6 +1,6 @@
 package org.ungs.view;
 
-import entities.Product;
+import entities.Result;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -11,6 +11,7 @@ import java.awt.GridBagLayout;
 import java.awt.Image;
 import java.awt.Insets;
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
@@ -46,12 +47,16 @@ public class ShoppinatorView extends JFrame implements Observer {
     NotFoundPanel notFoundPanel;
     ProductsPanel productsPanel;
     SpinnerPanel spinnerPanel;
+    JPanel checkboxesPanel;
+    List<JCheckBox> checkBoxes;
+    List<Result> productList;
 
     public ShoppinatorView(Shoppinator shoppinator) {
-        this.initialize();
         this.shoppinator = shoppinator;
+        this.initialize();
         this.shoppinatorController = new ShoppinatorController(this, shoppinator);
-        addObservers();
+        shoppinator.addObserver(this);
+        this.productList = new ArrayList<>();
     }
 
     public void initialize() {
@@ -81,10 +86,13 @@ public class ShoppinatorView extends JFrame implements Observer {
         refreshConstraints.anchor = GridBagConstraints.LINE_START; // Align to the left
 
         refreshButton = new JButton();
-        ImageIcon refreshIcon = new ImageIcon("src/main/resources/img/refresh.png");
+        ImageIcon refreshIcon = new ImageIcon("src/main/resources/img/red-button.png");
         Image scaledImage = refreshIcon.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
         refreshIcon = new ImageIcon(scaledImage);
         refreshButton.setIcon(refreshIcon);
+        refreshButton.setOpaque(false);
+        refreshButton.setContentAreaFilled(false);
+        refreshButton.setBorderPainted(false);
         headerPanel.add(refreshButton, refreshConstraints);
 
         add(headerPanel, BorderLayout.PAGE_START);
@@ -138,25 +146,25 @@ public class ShoppinatorView extends JFrame implements Observer {
 
         inputPanel.add(pricePanel, BorderLayout.CENTER);
 
-        JPanel checkboxesPanel = new JPanel();
+        checkboxesPanel = new JPanel();
         checkboxesPanel.setLayout(new FlowLayout());
         checkboxesPanel.setBackground(new Color(55, 71, 79));
-        checkboxesNotSelected = new JLabel(new ImageIcon("src/main/resources/img/arrow.png"));
 
-        fravegaCheckbox = new JCheckBox("Fravega");
-        garbarinoCheckbox = new JCheckBox("Garbarino");
+        checkBoxes = new ArrayList<>();
+        // every shop name is a checkbox, with an identifier that's the shop name
+        for (String shopName : shoppinator.getShopNames()) {
+            JCheckBox shopCheckbox = new JCheckBox(shopName);
+            shopCheckbox.setForeground(Color.WHITE);
+            checkboxesPanel.add(shopCheckbox);
+            checkBoxes.add(shopCheckbox);
+        }
 
-        fravegaCheckbox.setForeground(Color.WHITE);
-        garbarinoCheckbox.setForeground(Color.WHITE);
+        inputPanel.add(checkboxesPanel, BorderLayout.SOUTH);
 
         JPanel imageAndCheckboxesPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         imageAndCheckboxesPanel.setBackground(new Color(55, 71, 79));
 
-        imageAndCheckboxesPanel.add(checkboxesNotSelected);
-        imageAndCheckboxesPanel.add(fravegaCheckbox);
-        imageAndCheckboxesPanel.add(garbarinoCheckbox);
-
-        checkboxesNotSelected.setVisible(false);
+        imageAndCheckboxesPanel.add(checkboxesPanel);
 
         inputPanel.add(imageAndCheckboxesPanel, BorderLayout.SOUTH);
 
@@ -171,14 +179,9 @@ public class ShoppinatorView extends JFrame implements Observer {
     }
 
     @Override
-    public void update(Observable o, Object productList) {
-        List<Product> products = (List<Product>) productList;
-        shoppinatorController.updateProductsPanel(products);
+    public void update(Observable o, Object products) {
+        productList.addAll((List<Result>) products);
+        shoppinatorController.updateProductsPanel(productList);
     }
 
-    private void addObservers() {
-        shoppinator.subscribe(this);
-
-        this.update(null, shoppinator.getProductList());
-    }
 }

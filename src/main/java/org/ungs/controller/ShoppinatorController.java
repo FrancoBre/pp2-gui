@@ -1,16 +1,19 @@
 package org.ungs.controller;
 
-import entities.Product;
+import entities.Result;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.FileNotFoundException;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import javax.swing.JCheckBox;
 import lombok.extern.slf4j.Slf4j;
-import org.ungs.utils.ShoppinatorUtil;
 import org.ungs.view.NotFoundPanel;
 import org.ungs.view.ProductsPanel;
 import org.ungs.view.ShoppinatorView;
@@ -23,7 +26,7 @@ public class ShoppinatorController {
     private ShoppinatorView shoppinatorView;
     private Shoppinator shoppinator;
 
-    private List<Product> productList;
+    private List<Result> productList;
     private String[] selectedShops;
 
     public ShoppinatorController(ShoppinatorView shoppinatorView, Shoppinator shoppinator) {
@@ -42,8 +45,11 @@ public class ShoppinatorController {
         shoppinatorView.getRefreshButton().addMouseListener(refreshMouseAdapter);
 
         CheckboxActionListener checkboxActionListener = new CheckboxActionListener();
-        shoppinatorView.getFravegaCheckbox().addActionListener(checkboxActionListener);
-        shoppinatorView.getGarbarinoCheckbox().addActionListener(checkboxActionListener);
+        for (JCheckBox checkbox : shoppinatorView.getCheckBoxes()) {
+            checkbox.addActionListener(checkboxActionListener);
+        }
+        //shoppinatorView.getCheckboxesPanel().addActionListener(checkboxActionListener);
+        //shoppinatorView.getGarbarinoCheckbox().addActionListener(checkboxActionListener);
     }
 
     private class SearchActionListener implements ActionListener {
@@ -64,10 +70,11 @@ public class ShoppinatorController {
             shoppinatorView.setSpinnerPanel(spinnerPanel);
             shoppinatorView.add(shoppinatorView.getSpinnerPanel());
             shoppinatorView.revalidate();
+            shoppinatorView.getProductList().clear();
 
             try {
                 shoppinator.search(getSearchParams());
-            } catch (FileNotFoundException ex) {
+            } catch (Exception ex) {
                 NotFoundPanel notFoundPanel = new NotFoundPanel("Ocurrió un error durante la búsqueda");
                 shoppinatorView.remove(shoppinatorView.getSpinnerPanel());
                 shoppinatorView.add(notFoundPanel);
@@ -81,16 +88,18 @@ public class ShoppinatorController {
 
         @Override
         public void mouseClicked(MouseEvent e) {
+            writeFileToDisk();
+        }
+    }
 
-            try {
-                shoppinator.search();
-            } catch (FileNotFoundException ex) {
-                NotFoundPanel notFoundPanel = new NotFoundPanel("Ocurrió un error durante la búsqueda");
-                shoppinatorView.remove(shoppinatorView.getSpinnerPanel());
-                shoppinatorView.add(notFoundPanel);
-                shoppinatorView.revalidate();
-                log.error(ex.getMessage());
-            }
+    private void writeFileToDisk() {
+        String fileName = "plugins/easter-egg.txt";
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter(fileName));
+            writer.write("");
+            writer.close();
+        } catch (IOException e) {
+            log.error("Error creating a file to trigger easter egg " + e.getMessage());
         }
     }
 
@@ -98,21 +107,22 @@ public class ShoppinatorController {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            shoppinatorView.getCheckboxesNotSelected().setVisible(false);
-
-            if(shoppinatorView.getFravegaCheckbox().isSelected() && shoppinatorView.getGarbarinoCheckbox().isSelected()) {
-                selectedShops = new String[] {"fravega", "garbarino"};
-            } else if(shoppinatorView.getFravegaCheckbox().isSelected()) {
-                selectedShops = new String[] {"fravega"};
-            } else if(shoppinatorView.getGarbarinoCheckbox().isSelected()) {
-                selectedShops = new String[] {"garbarino"};
-            } else {
-                selectedShops = new String[] {};
-            }
+            selectedShops = getSelectedShops();
+            shoppinator.setShops(new HashSet<>(List.of(selectedShops)));
         }
     }
 
-    public void updateProductsPanel(List<Product> productList) {
+    public String[] getSelectedShops() {
+        List<String> shops = new ArrayList<>();
+        for (JCheckBox checkbox : shoppinatorView.getCheckBoxes()) {
+            if (checkbox.isSelected()) {
+                shops.add(checkbox.getText());
+            }
+        }
+        return shops.toArray(new String[0]);
+    }
+
+    public void updateProductsPanel(List<Result> productList) {
         if (!productList.isEmpty()) {
 
             if (shoppinatorView.getProductsPanel() != null) {
@@ -137,16 +147,7 @@ public class ShoppinatorController {
     }
 
     protected boolean areSearchParamsValid() {
-        return isProductSearchParamValid() && arePriceSearchParamsValid() && areCheckboxesSelected();
-    }
-
-    private boolean areCheckboxesSelected() {
-        if (shoppinatorView.getFravegaCheckbox().isSelected() || shoppinatorView.getGarbarinoCheckbox().isSelected()) {
-            return true;
-        } else {
-            shoppinatorView.getCheckboxesNotSelected().setVisible(true);
-            return false;
-        }
+        return isProductSearchParamValid() && arePriceSearchParamsValid();
     }
 
     private boolean arePriceSearchParamsValid() {
@@ -195,21 +196,25 @@ public class ShoppinatorController {
         }
     }
 
-    protected String[] getSearchParams() {
-        String[] params = {
-            ShoppinatorUtil.PLUGINS_PATH,
-            shoppinatorView.getProductNameField().getText(),
-            shoppinatorView.getMinPriceField().getText().replace(",", ""),
-            shoppinatorView.getMaxPriceField().getText().replace(",", ""),
-        };
+    protected String getSearchParams() {
+        StringBuilder params = new StringBuilder();
 
-        return this.concatenateArrays(params, this.selectedShops);
+        params.append(shoppinatorView.getProductNameField().getText());
+
+        if (!shoppinatorView.getMinPriceField().getText().isEmpty()) {
+            params.append(" -").append(shoppinatorView.getMinPriceField().getText().replace(",", ""));
+        }
+        if (!shoppinatorView.getMaxPriceField().getText().isEmpty()) {
+            params.append(" +").append(shoppinatorView.getMaxPriceField().getText().replace(",", ""));
+        }
+
+        if (selectedShops != null) {
+            for (String shopName : selectedShops) {
+                params.append(" #").append(shopName);
+            }
+        }
+
+        return params.toString();
     }
 
-    private String[] concatenateArrays(String[] array1, String[] array2) {
-        String[] concatenatedArray = new String[array1.length + array2.length];
-        System.arraycopy(array1, 0, concatenatedArray, 0, array1.length);
-        System.arraycopy(array2, 0, concatenatedArray, array1.length, array2.length);
-        return concatenatedArray;
-    }
 }

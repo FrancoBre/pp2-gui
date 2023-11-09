@@ -17,8 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 @NoArgsConstructor(access = lombok.AccessLevel.PRIVATE)
 public class ShoppinatorUtil {
 
-    public static final String DEFAULT_PATH = "plugins/default/";
-    public static final String PLUGINS_PATH = "plugins/availables/";
+    public static final String PLUGINS_PATH = "plugins/";
 
     public static void openWebBrowser(String url) {
         if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {

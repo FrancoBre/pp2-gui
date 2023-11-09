@@ -1,6 +1,7 @@
 package org.ungs.view;
 
 import entities.Product;
+import entities.Result;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -24,7 +25,7 @@ import org.ungs.utils.ShoppinatorUtil;
 
 public class ProductsPanel extends JPanel {
 
-    public ProductsPanel(List<Product> products) {
+    public ProductsPanel(List<Result> results) {
         setPreferredSize(new Dimension(800, 600));
         setLayout(new BorderLayout());
 
@@ -32,8 +33,8 @@ public class ProductsPanel extends JPanel {
         JPanel cardPanel = new JPanel();
         cardPanel.setLayout(new BoxLayout(cardPanel, BoxLayout.Y_AXIS));
 
-        for (Product product : products) {
-            JPanel card = createCard(product);
+        for (Result result : results) {
+            JPanel card = createCard(result);
             cardPanel.add(card);
             cardPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         }
@@ -49,7 +50,7 @@ public class ProductsPanel extends JPanel {
 
     }
 
-    private JPanel createCard(Product product) {
+    private JPanel createCard(Result result) {
         JPanel card = new JPanel();
         card.setPreferredSize(new Dimension(300, 100));
         card.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
@@ -62,7 +63,7 @@ public class ProductsPanel extends JPanel {
 
         // Add image to the left
         JLabel imageLabel = new JLabel();
-        BufferedImage image = ShoppinatorUtil.fetchImageFromUrl(product.getProductPresentation().getProductImageUrl());
+        BufferedImage image = ShoppinatorUtil.fetchImageFromUrl(result.getProductImageUrl());
         imageLabel.setIcon(new ImageIcon(image));
         gbc.gridx = 0;
         gbc.gridy = 0; // Use gridy value
@@ -74,18 +75,18 @@ public class ProductsPanel extends JPanel {
         titlePricePanel.setLayout(new BorderLayout());
         titlePricePanel.setBackground(Color.DARK_GRAY); // Set background color
 
-        JLabel nameLabel = new JLabel(product.getName());
+        JLabel nameLabel = new JLabel(result.getName());
         nameLabel.setForeground(Color.WHITE); // Set text color
         nameLabel.setFont(new Font("Arial", Font.BOLD, 18)); // Set font and size
         titlePricePanel.add(nameLabel, BorderLayout.NORTH);
 
-        JLabel priceLabel = new JLabel("Precio: " + product.getProductPresentation().getPrice());
+        JLabel priceLabel = new JLabel("Precio: " + result.getPrice());
         priceLabel.setForeground(Color.WHITE); // Set text color
         priceLabel.setFont(new Font("Arial", Font.PLAIN, 16)); // Set font and size
         titlePricePanel.add(priceLabel, BorderLayout.CENTER);
 
         // Use a JLabel with vertical scrolling for the title
-        JLabel title = new JLabel("<html><body>" + product.getName() + "</body></html>");
+        JLabel title = new JLabel("<html><body>" + result.getName() + "</body></html>");
         title.setForeground(Color.WHITE);
         title.setVerticalAlignment(JLabel.TOP);
         title.setVerticalTextPosition(JLabel.TOP);
@@ -99,9 +100,9 @@ public class ProductsPanel extends JPanel {
         card.add(titlePricePanel, gbc);
 
         // Add button at the bottom
-        JButton postButton = new JButton("Visitar tienda");
+        JButton postButton = new JButton("Visitar " + result.getShopName());
         postButton.addActionListener(e -> {
-            String postUrl = product.getPostUrl();
+            String postUrl = result.getPostUrl();
             ShoppinatorUtil.openWebBrowser(postUrl);
         });
         gbc.gridx = 1;
