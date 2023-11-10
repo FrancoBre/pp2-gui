@@ -1,6 +1,6 @@
 package org.ungs.view;
 
-import entities.Result;
+import entities.Article;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -37,16 +37,7 @@ public class ShoppinatorView extends JFrame implements Observer {
         this.shoppinator = shoppinator;
         this.initialize();
         this.shoppinatorController = new ShoppinatorController(this, shoppinator);
-        addObservers();
-    }
-
-    private void addObservers() {
         this.shoppinator.addObserver(this);
-
-        List<Result> searchResult = shoppinator.getSearchResult();
-        if (searchResult != null) {
-            this.update(null, searchResult);
-        }
     }
 
     public void initialize() {
@@ -96,7 +87,7 @@ public class ShoppinatorView extends JFrame implements Observer {
     @Override
     public void update(Observable o, Object searchResult) {
 
-        List<Result> products = (List<Result>) searchResult;
+        List<Article> products = (List<Article>) searchResult;
         shoppinatorController.updateProductsPanel(products);
     }
 }

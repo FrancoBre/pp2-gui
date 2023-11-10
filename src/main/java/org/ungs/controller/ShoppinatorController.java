@@ -1,7 +1,6 @@
 package org.ungs.controller;
 
-import entities.Product;
-import entities.Result;
+import entities.Article;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -17,12 +16,12 @@ public class ShoppinatorController {
     private ShoppinatorView shoppinatorView;
     private Shoppinator shoppinator;
 
-    private List<Product> productList;
+    private List<Article> articleList;
 
     public ShoppinatorController(ShoppinatorView shoppinatorView, Shoppinator shoppinator) {
         this.shoppinatorView = shoppinatorView;
         this.shoppinator = shoppinator;
-        this.productList = new ArrayList<>();
+        this.articleList = new ArrayList<>();
 
         // Add ActionListener to the input field
         shoppinatorView.getProductNameField().addActionListener(new SearchActionListener());
@@ -54,7 +53,7 @@ public class ShoppinatorController {
         }
     }
 
-    public void updateProductsPanel(List<Result> productList) {
+    public void updateProductsPanel(List<Article> productList) {
         if (!productList.isEmpty()) {
 
             if(shoppinatorView.getProductsPanel() != null) {

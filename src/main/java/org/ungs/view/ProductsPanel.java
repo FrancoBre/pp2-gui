@@ -1,6 +1,6 @@
 package org.ungs.view;
 
-import entities.Result;
+import entities.Article;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -24,7 +24,7 @@ import org.ungs.utils.ShoppinatorUtil;
 
 public class ProductsPanel extends JPanel {
 
-    public ProductsPanel(List<Result> products) {
+    public ProductsPanel(List<Article> products) {
         setPreferredSize(new Dimension(800, 600));
         setLayout(new BorderLayout());
 
@@ -32,7 +32,7 @@ public class ProductsPanel extends JPanel {
         JPanel cardPanel = new JPanel();
         cardPanel.setLayout(new BoxLayout(cardPanel, BoxLayout.Y_AXIS));
 
-        for (Result product : products) {
+        for (Article product : products) {
             JPanel card = createCard(product);
             cardPanel.add(card);
             cardPanel.add(Box.createRigidArea(new Dimension(0, 10)));
@@ -49,7 +49,7 @@ public class ProductsPanel extends JPanel {
 
     }
 
-    private JPanel createCard(Result product) {
+    private JPanel createCard(Article product) {
         JPanel card = new JPanel();
         card.setPreferredSize(new Dimension(300, 100));
         card.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
@@ -62,7 +62,7 @@ public class ProductsPanel extends JPanel {
 
         // Add image to the left
         JLabel imageLabel = new JLabel();
-        BufferedImage image = ShoppinatorUtil.fetchImageFromUrl(product.getProductImageUrl());
+        BufferedImage image = ShoppinatorUtil.fetchImageFromUrl("holaholahola");
         imageLabel.setIcon(new ImageIcon(image));
         gbc.gridx = 0;
         gbc.gridy = 0; // Use gridy value
@@ -98,16 +98,11 @@ public class ProductsPanel extends JPanel {
         gbc.gridheight = 1; // Reset grid height
         card.add(titlePricePanel, gbc);
 
-        // Add button at the bottom
-        JButton postButton = new JButton("Visitar " + product.getShopName());
-        postButton.addActionListener(e -> {
-            //String postUrl = product.getPostUrl();
-            String postUrl = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
-            ShoppinatorUtil.openWebBrowser(postUrl);
-        });
+        JLabel shopName = new JLabel("Visitar " + product.getShop());
+        shopName.setForeground(Color.WHITE);
         gbc.gridx = 1;
         gbc.gridy = 1; // Use gridy value
-        card.add(postButton, gbc);
+        card.add(shopName, gbc);
 
         return card;
     }
